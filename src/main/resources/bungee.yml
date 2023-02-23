@@ -1,0 +1,4 @@
+name: Web Bridge
+version: '${project.version}'
+main: de.littleprogrammer.webbridge.Main
+description: Can recieve and send data from and to a webserver using redis
