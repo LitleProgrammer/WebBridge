@@ -1,0 +1,26 @@
+{
+  "Lobby-1": {
+    "online": true,
+    "uptime": 2092814,
+    "playersMax": 100,
+    "playersOnline": 2
+  },
+  "Proxy-1": {
+    "online": true,
+    "uptime": 98243285,
+    "playersMax": "100",
+    "playersOnline": 2
+  },
+  "PreLobby-1": {
+    "online": true,
+    "uptime": 21474,
+    "playersMax": "100",
+    "playersOnline": 2
+  },
+  "BedWars-1": {
+    "online": true,
+    "uptime": 23521,
+    "playersMax": "100",
+    "playersOnline": 2
+  }
+}
