@@ -14,62 +14,59 @@ public class JsonSetter implements Listener {
     private Main main = Main.getInstance();
 
     private String name;
-    private String uptime;
     private int onPlayers;
-    private Object[] players;
     private StringBuilder json = new StringBuilder();
-    private HashMap<String, String> maxPlayers = new HashMap<>();
     private int serverMax;
 
-    private List<ServerInfo> servers = new ArrayList<>();
+    public void setJson(){
+        //Resets String builder
+        json.setLength(0);
 
-
-    public JsonSetter() {
+        //Resets Redis variable
         main.getJedis().jsonDel("servers");
+
+        //Start building string
         json.append("{");
-        servers.clear();
+
+        //Setting servers to string builder
         for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
-            servers.add(serverInfo);
-        }
+            //Test if current server is fallback (nobody likes fallback)
+            if (!serverInfo.getName().equalsIgnoreCase("fallback")) {
+                //Setting variables
+                name = serverInfo.getName();
+                onPlayers = serverInfo.getPlayers().size();
+                serverMax = 32;
+                    //players = serverInfo.getPlayers().toArray();
 
-        for (int i = 0; i < servers.size(); i++){
-            ServerInfo serverInfo = servers.get(i);
-            name = serverInfo.getName();
-            onPlayers = serverInfo.getPlayers().size();
-            serverMax = Integer.parseInt(maxPlayers.get(name));
-            players = serverInfo.getPlayers().toArray();
 
-            if (i == servers.size() - 1){
-                json.append("\"" + name + "\": {\n" +
-                        "    \"online\": true,\n" +
-                        "    \"playersMax\": " + serverMax + ",\n" +
-                        "    \"playersOnline\": " + onPlayers + "\n" +
-                        "  }");
 
-            }else {
+                System.out.println("Geathering server infos for server:" + name);
+
                 json.append("\"" + name + "\": {\n" +
                         "    \"online\": true,\n" +
                         "    \"playersMax\": " + serverMax + ",\n" +
                         "    \"playersOnline\": " + onPlayers + "\n" +
                         "  },");
             }
-        }
-        json.append("}");
 
-        main.getJedis().jsonSet("servers", json.toString());
-        for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()){
+            //Setting proxy to string builder
+            json.append("\"" + ProxyServer.getInstance().getName() + "\": {\n" +
+                    "    \"online\": true,\n" +
+                    "    \"motd\": " + ProxyServer.getInstance().getConfigurationAdapter().getListeners(). iterator().next().getMotd() + ",\n" +
+                    "    \"playersMax\": " + ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers() + ",\n" +
+                    "    \"playersOnline\": " + ProxyServer.getInstance().getPlayers().size() + "\n" +
+                    "  },");
+
+            json.append("}");
+
+
+            //Setting string builder to RedisJSON
+            main.getJedis().jsonSet("servers", json.toString());
+            System.out.println("Set json string to servers:" + json.toString());
+        /*for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()){
             main.getJedis().jsonNumIncrBy("servers", Path2.of("$." + serverInfo.getName() + ".uptime"), 1);
+        }*/
+            }
         }
-    }
-
-    public void addMaxPlayers(String message){
-        String[] parts = message.split(":", 2);
-        String serverName = parts[0];
-        String maxPlayerCount = parts[1];
-
-        maxPlayers.put(serverName, maxPlayerCount);
-        JsonSetter jsonSetter = new JsonSetter();
-    }
-
-
 }
+

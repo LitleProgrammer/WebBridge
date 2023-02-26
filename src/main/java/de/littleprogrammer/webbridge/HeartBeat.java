@@ -7,12 +7,12 @@ import java.util.concurrent.TimeUnit;
 public class HeartBeat {
 
     private Main main = Main.getInstance();
-    private JsonSetter jsonSetter;
+    private JsonSetter jsonSetter = new JsonSetter();
 
     public HeartBeat() {
         ProxyServer.getInstance().getScheduler().schedule(main, () -> {
-            main.getJedis().publish("heartbeat", "maxPlayerCount"); //also put jsonSetter i here but before so the last data gets set and the new gets read
-        }, 1, 1, TimeUnit.MINUTES);
+            jsonSetter.setJson();
+        }, 5, 60, TimeUnit.SECONDS);
     }
 
 }
