@@ -13,6 +13,8 @@ public final class Main extends Plugin {
     private JedisPooled jedis;
     private HeartBeat heartBeat;
 
+    private JsonSetter jsonSetter;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -21,14 +23,15 @@ public final class Main extends Plugin {
         heartBeat = new HeartBeat();
 
 
+
         //Jedis
         jedis = new JedisPooled("localhost", 6379);
         getProxy().getScheduler().schedule(this, () -> {
 
-            if (jedis.get("ping").equalsIgnoreCase("1")){
-                jedis.set("ping", "0");
-            }else {
-                jedis.set("ping", "1");
+            try {
+                jedis.set("ping", "why you here");
+            }catch (Exception e) {
+                e.printStackTrace();
             }
 
         }, 59, 57, TimeUnit.SECONDS);
@@ -37,13 +40,15 @@ public final class Main extends Plugin {
         //Jedis Connect
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
-        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "test"));
+        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "test", "serviceStop", "serviceStart", "serviceRestart", "serviceAdd", "serviceKick"));
 
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        jsonSetter = new JsonSetter();
+        jsonSetter.setEmpty();
     }
 
     public static Main getInstance() {

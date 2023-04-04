@@ -14,6 +14,7 @@ public class JsonSetter implements Listener {
     private Main main = Main.getInstance();
 
     private String name;
+    private String motd;
     private int onPlayers;
     private StringBuilder json = new StringBuilder();
     private int serverMax;
@@ -26,47 +27,51 @@ public class JsonSetter implements Listener {
         main.getJedis().jsonDel("servers");
 
         //Start building string
-        json.append("{");
+        json.append("[");
 
         //Setting servers to string builder
         for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
-            //Test if current server is fallback (nobody likes fallback)
+            //Test if current server is fallback (all my homies hat fallback)
             if (!serverInfo.getName().equalsIgnoreCase("fallback")) {
                 //Setting variables
                 name = serverInfo.getName();
+                motd = serverInfo.getMotd();
                 onPlayers = serverInfo.getPlayers().size();
                 serverMax = 32;
-                    //players = serverInfo.getPlayers().toArray();
+                //players = serverInfo.getPlayers().toArray();
 
 
-
-                System.out.println("Geathering server infos for server:" + name);
-
-                json.append("\"" + name + "\": {\n" +
+                json.append("{\n" +
+                        "    \"name\": " + '"' + name + '"' + ",\n" +
                         "    \"online\": true,\n" +
+                        "    \"motd\": " + '"' + motd + '"' + ",\n" +
                         "    \"playersMax\": " + serverMax + ",\n" +
                         "    \"playersOnline\": " + onPlayers + "\n" +
-                        "  },");
+                        "  },\n");
+                }
             }
 
-            //Setting proxy to string builder
-            json.append("\"" + ProxyServer.getInstance().getName() + "\": {\n" +
-                    "    \"online\": true,\n" +
-                    "    \"motd\": " + ProxyServer.getInstance().getConfigurationAdapter().getListeners(). iterator().next().getMotd() + ",\n" +
-                    "    \"playersMax\": " + ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers() + ",\n" +
-                    "    \"playersOnline\": " + ProxyServer.getInstance().getPlayers().size() + "\n" +
-                    "  },");
 
-            json.append("}");
+         //Setting proxy to string builder
+         json.append("{\n" +
+                 "    \"name\": " + '"' + ProxyServer.getInstance().getName() + '"' + ",\n" +
+                 "    \"online\": true,\n" +
+                 "    \"motd\": " + '"' + ProxyServer.getInstance().getConfigurationAdapter().getListeners(). iterator().next().getMotd() + '"' + ",\n" +
+                 "    \"playersMax\": " + ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers() + ",\n" +
+                 "    \"playersOnline\": " + ProxyServer.getInstance().getPlayers().size()  + "\n" +
+                 "  }");
+
+         json.append("]");
 
 
             //Setting string builder to RedisJSON
             main.getJedis().jsonSet("servers", json.toString());
-            System.out.println("Set json string to servers:" + json.toString());
-        /*for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()){
-            main.getJedis().jsonNumIncrBy("servers", Path2.of("$." + serverInfo.getName() + ".uptime"), 1);
-        }*/
             }
-        }
+
+
+            //Setting empty message on shutdown
+            public void setEmpty() {
+                main.getJedis().jsonSet("servers", "");
+            }
 }
 

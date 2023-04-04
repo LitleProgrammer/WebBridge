@@ -1,5 +1,6 @@
-{
-  "Lobby-1": {
+[
+  {
+    "name": "Lobby-1",
     "online": true,
     "uptime": 2092814,
     "playersMax": 100,
@@ -23,4 +24,33 @@
     "playersMax": "100",
     "playersOnline": 2
   }
-}
+],
+[{
+  "name": "PreLobby-1",
+  "online": true,
+  "motd": "CloudNet provided serverInfo",
+  "playersMax": 32,
+  "playersOnline": 0,
+  "tps1": 20,
+  "tps2": 20,
+  "tps3": 20,
+  "tps4": 19.9,
+  "tps5": 19.5,
+  "tps6": 18.8,
+  "tps7": 18.6,
+  "tps8": 18.9,
+  "tps9": 19.9,
+  "tps10": 20,
+  "tps11": 20,
+  "tps12": 20,
+  "tps13": 19.7,
+  "tps14": 19.8,
+  "tps15": 20
+},
+{
+  "name": "BungeeCord",
+  "online": true,
+  "motd": "CloudNet v3 [Earthquake] BungeeCord Proxy instance",
+  "playersMax": -1,
+  "playersOnline": 0
+}]

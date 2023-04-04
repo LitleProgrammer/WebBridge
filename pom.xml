@@ -59,6 +59,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>cloudnet-releases</id>
+            <url>https://repo.cloudnetservice.eu/repository/releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -72,6 +76,12 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>4.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-driver</artifactId>
+            <version>3.4.0-RELEASE</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
